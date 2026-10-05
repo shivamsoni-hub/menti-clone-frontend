@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BarChart3, ArrowLeft, Users, Award } from 'lucide-react';
 import API from '../utils/api';
+import { io } from 'socket.io-client';
+
 
 export default function SessionStats() {
   const { sessionId } = useParams();
@@ -10,10 +12,15 @@ export default function SessionStats() {
   const [stats, setStats] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const [totalParticipants, setTotalParticipants] = useState(0);
+
+
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/sessions/${sessionId}/stats`, { withCredentials: true })
+    axios.get(`https://menti-clone-backend-3.onrender.com/api/sessions/${sessionId}/stats`, { withCredentials: true })
       .then(res => {
         setStats(res.data.stats);
+        setTotalParticipants(res.data.totalParticipants);
+
         setLoading(false);
       })
       .catch(err => {
@@ -22,14 +29,16 @@ export default function SessionStats() {
       });
   }, [sessionId]);
 
-  const totalParticipation = stats.reduce((acc, curr) => acc + curr.totalVotes, 0);
+  // const totalParticipation = stats.reduce((acc, curr) => acc + curr.totalVotes, 0);
+  const totalParticipation = totalParticipants;
+
 
   return (
     <div className="min-h-screen bg-slate-900 text-white p-8 max-w-4xl mx-auto space-y-8">
-      
+
       {/* Top Navigation */}
       <div className="flex justify-between items-center border-b border-white/10 pb-6">
-        <button 
+        <button
           onClick={() => navigate('/dashboard')}
           className="flex items-center gap-2 text-slate-400 hover:text-white transition text-sm font-medium"
         >
@@ -81,15 +90,56 @@ export default function SessionStats() {
           </div>
         ) : (
           stats.map((item, index) => (
-            <div key={item.questionId} className="bg-slate-800/60 border border-white/10 p-6 rounded-2xl space-y-2">
+            <div
+              key={item.questionId}
+              className="bg-slate-800/60 border border-white/10 p-6 rounded-2xl space-y-5"
+            >
               <div className="flex justify-between items-center">
-                <h3 className="font-bold text-lg">{index + 1}. {item.questionText}</h3>
+                <h3 className="font-bold text-lg">
+                  {index + 1}. {item.questionText}
+                </h3>
+
                 <span className="font-mono text-indigo-400 text-sm bg-indigo-500/10 px-3 py-1 rounded-full">
                   {item.totalVotes} Votes
                 </span>
               </div>
+
+              <div className="space-y-3">
+                {item.options.map(option => {
+                  const percentage =
+                    item.totalVotes > 0
+                      ? Math.round(
+                        (option.votes / item.totalVotes) * 100
+                      )
+                      : 0;
+
+                  return (
+                    <div key={option.id}>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span className="text-slate-300">
+                          {option.option_text}
+                        </span>
+
+                        <span className="text-slate-400">
+                          {option.votes} ({percentage}%)
+                        </span>
+                      </div>
+
+                      <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-indigo-500 rounded-full"
+                          style={{
+                            width: `${percentage}%`
+                          }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           ))
+
         )}
       </div>
 

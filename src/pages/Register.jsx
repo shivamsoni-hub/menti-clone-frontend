@@ -18,7 +18,7 @@ export default function Register() {
     setErrorMsg('');
 
     try {
-      await axios.post('http://localhost:5000/api/auth/register', { name, email, password });
+      await axios.post('https://menti-clone-backend-3.onrender.com/api/auth/register', { name, email, password });
       navigate('/login');
     } catch (err) {
       setErrorMsg(err.response?.data?.error || 'Registration failed. Email might already be taken.');

@@ -19,10 +19,10 @@ export default function AudienceVote() {
   const activeQuestionIndex = 0; // Displaying the primary question
 
   // Dynamic voting URL for mobile sharing
-  const joinUrl = `${window.location.protocol}//${window.location.hostname}:3000/vote/${passcode}`;
+  const joinUrl = `https://menti-clone-frontend-3.onrender.com/vote/${passcode}`;
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/sessions/${passcode}`)
+    axios.get(`https://menti-clone-backend-3.onrender.com/api/sessions/${passcode}`)
       .then(res => {
         setSession(res.data.session);
         setQuestions(res.data.questions);

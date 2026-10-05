@@ -17,7 +17,7 @@ export default function Login() {
     setErrorMsg('');
 
     try {
-      await axios.post('http://localhost:5000/api/auth/login', { email, password }, { withCredentials: true });
+      await axios.post('https://menti-clone-backend-3.onrender.com/api/auth/login', { email, password }, { withCredentials: true });
       navigate('/presenter/dashboard');
     } catch (err) {
       setErrorMsg(err.response?.data?.error || 'Failed to login. Please check your credentials.');

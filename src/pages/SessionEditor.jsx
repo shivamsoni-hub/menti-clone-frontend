@@ -16,7 +16,7 @@ export default function SessionEditor() {
 
   const fetchSessionData = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/sessions/code_lookup_or_id`, { /* placeholder or fetch via passcode */ });
+      const res = await axios.get(`https://menti-clone-backend-3.onrender.com/api/sessions/code_lookup_or_id`, { /* placeholder or fetch via passcode */ });
     } catch (err) {
       // Fetch session by ID or fallback
     }
@@ -24,7 +24,7 @@ export default function SessionEditor() {
 
   useEffect(() => {
     // Fetch session details and existing questions
-    axios.get(`http://localhost:5000/api/sessions`, { withCredentials: true })
+    axios.get(`https://menti-clone-backend-3.onrender.com/api/sessions`, { withCredentials: true })
       .then(res => {
         const found = res.data.find(s => s.id.toString() === sessionId);
         setSession(found);
@@ -35,14 +35,14 @@ export default function SessionEditor() {
   }, [sessionId]);
 
   const loadQuestions = () => {
-    axios.get(`http://localhost:5000/api/sessions/passcode_helper`, { withCredentials: true }).catch(() => {
+    axios.get(`https://menti-clone-backend-3.onrender.com/api/sessions/passcode_helper`, { withCredentials: true }).catch(() => {
       // Alternatively direct query helper
     });
     // For direct fetching using session details
-    axios.get(`http://localhost:5000/api/sessions`, { withCredentials: true }).then(res => {
+    axios.get(`https://menti-clone-backend-3.onrender.com/api/sessions`, { withCredentials: true }).then(res => {
       const s = res.data.find(item => item.id.toString() === sessionId);
       if (s) {
-        axios.get(`http://localhost:5000/api/sessions/${s.passcode}`).then(qRes => {
+        axios.get(`https://menti-clone-backend-3.onrender.com/api/sessions/${s.passcode}`).then(qRes => {
           setQuestions(qRes.data.questions);
         });
       }
@@ -68,7 +68,7 @@ export default function SessionEditor() {
     if (!questionText.trim()) return;
 
     try {
-      await axios.post(`http://localhost:5000/api/sessions/${sessionId}/questions`, {
+      await axios.post(`https://menti-clone-backend-3.onrender.com/api/sessions/${sessionId}/questions`, {
         question_text: questionText,
         question_type: 'multiple_choice',
         options
@@ -85,7 +85,7 @@ export default function SessionEditor() {
 
   const handleDeleteQuestion = async (qId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/questions/${qId}`, { withCredentials: true });
+      await axios.delete(`https://menti-clone-backend-3.onrender.com/api/questions/${qId}`, { withCredentials: true });
       loadQuestions();
     } catch (err) {
       console.error(err);
