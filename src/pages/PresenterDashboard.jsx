@@ -42,11 +42,23 @@ export default function PresenterDashboard() {
       const { sessionId, passcode } = sessionRes.data;
 
       // 2. Create Initial Question & Options for this Session (Added withCredentials: true)
-      await axios.post(`https://menti-clone-backend-2.onrender.com/api/sessions/${sessionId}/questions`, {
-        question_text: questionText,
-        question_type: 'multiple_choice',
-        options: options.filter(opt => opt.trim() !== '')
-      }, { withCredentials: true });
+      const token = localStorage.getItem("token");
+
+      await axios.post(
+        `https://menti-clone-backend-2.onrender.com/api/sessions/${sessionId}/questions`,
+        {
+          question_text: questionText,
+          question_type: "multiple_choice",
+          options: options.filter(opt => opt.trim() !== "")
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+          withCredentials: true
+        }
+      );
+
 
       // 3. Redirect to Presenter Big Screen View
       // navigate(`/presenter/session/${passcode}`);
