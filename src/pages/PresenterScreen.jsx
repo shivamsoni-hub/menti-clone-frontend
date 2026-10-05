@@ -29,7 +29,7 @@ export default function PresenterScreen() {
 
   const fetchSession = async () => {
     try {
-      const res = await axios.get(`https://menti-clone-backend-3.onrender.com/api/sessions/${passcode}`);
+      const res = await axios.get(`https://menti-clone-backend-2.onrender.com/api/sessions/${passcode}`);
       setSession(res.data.session);
       setQuestions(res.data.questions || []);
       if (res.data.initialResults) {
@@ -98,9 +98,9 @@ export default function PresenterScreen() {
       };
 
       if (editingQuestion) {
-        await axios.put(`https://menti-clone-backend-3.onrender.com/api/questions/${editingQuestion.id}`, payload);
+        await axios.put(`https://menti-clone-backend-2.onrender.com/api/questions/${editingQuestion.id}`, payload);
       } else {
-        await axios.post(`https://menti-clone-backend-3.onrender.com/api/questions`, payload);
+        await axios.post(`https://menti-clone-backend-2.onrender.com/api/questions`, payload);
       }
 
       setShowQuestionModal(false);
@@ -113,7 +113,7 @@ export default function PresenterScreen() {
   const handleDeleteQuestion = async (questionId) => {
     if (!window.confirm("Are you sure you want to delete this question?")) return;
     try {
-      await axios.delete(`https://menti-clone-backend-3.onrender.com/api/questions/${questionId}`);
+      await axios.delete(`https://menti-clone-backend-2.onrender.com/api/questions/${questionId}`);
       if (activeQuestionIndex >= questions.length - 1 && activeQuestionIndex > 0) {
         setActiveQuestionIndex(activeQuestionIndex - 1);
       }
@@ -126,7 +126,7 @@ export default function PresenterScreen() {
   const handleToggleActiveState = async (q) => {
     try {
       const nextState = q.current_state === 'active' ? 'inactive' : 'active';
-      await axios.patch(`https://menti-clone-backend-3.onrender.com/api/questions/${q.id}/state`, { current_state: nextState });
+      await axios.patch(`https://menti-clone-backend-2.onrender.com/api/questions/${q.id}/state`, { current_state: nextState });
       fetchSession();
     } catch (err) {
       console.error("Error updating question state:", err);
@@ -149,7 +149,7 @@ export default function PresenterScreen() {
     }));
 
     try {
-      await axios.patch(`https://menti-clone-backend-3.onrender.com/api/sessions/${session.id}/reorder`, { questions: reorderedPayload });
+      await axios.patch(`https://menti-clone-backend-2.onrender.com/api/sessions/${session.id}/reorder`, { questions: reorderedPayload });
       setQuestions(updatedQuestions);
       setActiveQuestionIndex(newIndex);
     } catch (err) {

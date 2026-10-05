@@ -16,7 +16,7 @@ export default function SessionStats() {
 
 
   useEffect(() => {
-    axios.get(`https://menti-clone-backend-3.onrender.com/api/sessions/${sessionId}/stats`, { withCredentials: true })
+    axios.get(`https://menti-clone-backend-2.onrender.com/api/sessions/${sessionId}/stats`, { withCredentials: true })
       .then(res => {
         setStats(res.data.stats);
         setTotalParticipants(res.data.totalParticipants);

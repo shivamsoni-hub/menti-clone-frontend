@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: 'https://menti-clone-backend-3.onrender.com/api',
+  baseURL: 'https://menti-clone-backend-2.onrender.com/api',
   withCredentials: true, // Automatically sends cookies with every request!
 });
 

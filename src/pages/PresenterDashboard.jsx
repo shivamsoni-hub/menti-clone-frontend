@@ -38,11 +38,11 @@ export default function PresenterDashboard() {
     setLoading(true);
     try {
       // 1. Create Session (Added withCredentials: true)
-      const sessionRes = await axios.post('https://menti-clone-backend-3.onrender.com/api/sessions', { title }, { withCredentials: true });
+      const sessionRes = await axios.post('https://menti-clone-backend-2.onrender.com/api/sessions', { title }, { withCredentials: true });
       const { sessionId, passcode } = sessionRes.data;
 
       // 2. Create Initial Question & Options for this Session (Added withCredentials: true)
-      await axios.post(`https://menti-clone-backend-3.onrender.com/api/sessions/${sessionId}/questions`, {
+      await axios.post(`https://menti-clone-backend-2.onrender.com/api/sessions/${sessionId}/questions`, {
         question_text: questionText,
         question_type: 'multiple_choice',
         options: options.filter(opt => opt.trim() !== '')
@@ -69,7 +69,7 @@ export default function PresenterDashboard() {
   const fetchSessions = async () => {
     try {
       const response = await fetch(
-        'https://menti-clone-backend-3.onrender.com/api/sessions',
+        'https://menti-clone-backend-2.onrender.com/api/sessions',
         {
           credentials: 'include'
         }
