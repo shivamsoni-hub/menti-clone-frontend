@@ -3,9 +3,9 @@ import { useParams } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
 import axios from 'axios';
 import { socket } from '../services/socket';
-import { 
-  Users, Copy, Check, X, Share2, Plus, Edit3, Trash2, 
-  ArrowUp, ArrowDown, EyeOff, Eye, ChevronLeft, ChevronRight, Save 
+import {
+  Users, Copy, Check, X, Share2, Plus, Edit3, Trash2,
+  ArrowUp, ArrowDown, EyeOff, Eye, ChevronLeft, ChevronRight, Save
 } from 'lucide-react';
 
 export default function PresenterScreen() {
@@ -93,16 +93,17 @@ export default function PresenterScreen() {
         session_id: session.id,
         question_text: questionText,
         question_type: questionType,
-        question_order: editingQuestion ? editingQuestion.question_order : questions.length + 1,
+        question_order: editingQuestion
+          ? editingQuestion.question_order
+          : questions.length + 1,
         options: optionsText.filter(opt => opt.trim() !== '')
       };
 
       if (editingQuestion) {
-        await axios.put(`https://menti-clone-backend-2.onrender.com/api/questions/${editingQuestion.id}`, payload);
+        await axios.put(`https://menti-clone-backend-2.onrender.com/api/questions/${editingQuestion.id}`, payload, { withCredentials: true } );
       } else {
-        await axios.post(`https://menti-clone-backend-2.onrender.com/api/questions`, payload);
+        await axios.post(`https://menti-clone-backend-2.onrender.com/api/questions`, payload, { withCredentials: true });
       }
-
       setShowQuestionModal(false);
       fetchSession();
     } catch (err) {
@@ -110,10 +111,11 @@ export default function PresenterScreen() {
     }
   };
 
+
   const handleDeleteQuestion = async (questionId) => {
     if (!window.confirm("Are you sure you want to delete this question?")) return;
     try {
-      await axios.delete(`https://menti-clone-backend-2.onrender.com/api/questions/${questionId}`);
+      await axios.delete(`https://menti-clone-backend-2.onrender.com/api/questions/${questionId}`, { withCredentials: true });
       if (activeQuestionIndex >= questions.length - 1 && activeQuestionIndex > 0) {
         setActiveQuestionIndex(activeQuestionIndex - 1);
       }
@@ -126,7 +128,7 @@ export default function PresenterScreen() {
   const handleToggleActiveState = async (q) => {
     try {
       const nextState = q.current_state === 'active' ? 'inactive' : 'active';
-      await axios.patch(`https://menti-clone-backend-2.onrender.com/api/questions/${q.id}/state`, { current_state: nextState });
+      await axios.patch(`https://menti-clone-backend-2.onrender.com/api/questions/${q.id}/state`, { current_state: nextState }, { withCredentials: true });
       fetchSession();
     } catch (err) {
       console.error("Error updating question state:", err);
@@ -149,7 +151,7 @@ export default function PresenterScreen() {
     }));
 
     try {
-      await axios.patch(`https://menti-clone-backend-2.onrender.com/api/sessions/${session.id}/reorder`, { questions: reorderedPayload });
+      await axios.patch(`https://menti-clone-backend-2.onrender.com/api/sessions/${session.id}/reorder`, { questions: reorderedPayload }, { withCredentials: true });
       setQuestions(updatedQuestions);
       setActiveQuestionIndex(newIndex);
     } catch (err) {
@@ -161,7 +163,7 @@ export default function PresenterScreen() {
     return (
       <div className="min-h-screen bg-slate-900 text-white flex flex-col items-center justify-center space-y-4">
         <p>Loading presentation session or no questions found...</p>
-        <button 
+        <button
           onClick={handleOpenAddModal}
           className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-xl font-semibold flex items-center gap-2"
         >
@@ -206,7 +208,7 @@ export default function PresenterScreen() {
       {/* Presenter Question Control Bar (Add, Edit, Reorder, State Toggle) */}
       <div className="max-w-4xl mx-auto w-full flex flex-wrap items-center justify-between gap-4 bg-slate-800/60 border border-white/10 px-5 py-3 rounded-2xl mt-4">
         <div className="flex items-center gap-2">
-          <button 
+          <button
             disabled={activeQuestionIndex === 0}
             onClick={() => setActiveQuestionIndex(prev => prev - 1)}
             className="p-2 bg-white/5 hover:bg-white/10 disabled:opacity-30 rounded-xl transition"
@@ -217,7 +219,7 @@ export default function PresenterScreen() {
           <span className="text-sm font-bold text-slate-300">
             Slide {activeQuestionIndex + 1} of {questions.length}
           </span>
-          <button 
+          <button
             disabled={activeQuestionIndex === questions.length - 1}
             onClick={() => setActiveQuestionIndex(prev => prev + 1)}
             className="p-2 bg-white/5 hover:bg-white/10 disabled:opacity-30 rounded-xl transition"
@@ -242,9 +244,8 @@ export default function PresenterScreen() {
           </button>
           <button
             onClick={() => handleToggleActiveState(activeQuestion)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-xl transition ${
-              activeQuestion.current_state === 'active' ? 'bg-amber-600/30 text-amber-300' : 'bg-emerald-600/30 text-emerald-300'
-            }`}
+            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-xl transition ${activeQuestion.current_state === 'active' ? 'bg-amber-600/30 text-amber-300' : 'bg-emerald-600/30 text-emerald-300'
+              }`}
             title="Toggle Active/Inactive state for voting"
           >
             {activeQuestion.current_state === 'active' ? <EyeOff size={14} /> : <Eye size={14} />}
