@@ -106,11 +106,11 @@ export default function PresenterScreen() {
       }
       setShowQuestionModal(false);
       fetchSession();
+
     } catch (err) {
       console.error("Error saving question:", err);
     }
   };
-
 
   const handleDeleteQuestion = async (questionId) => {
     if (!window.confirm("Are you sure you want to delete this question?")) return;
@@ -151,7 +151,7 @@ export default function PresenterScreen() {
     }));
 
     try {
-      await axios.patch(`https://menti-clone-backend-2.onrender.com/api/sessions/${session.id}/reorder`, { questions: reorderedPayload }, { withCredentials: true });
+      await axios.patch(`https://menti-clone-backend-2.onrender.com/api/sessions/${session.id}/reorder`, { questions: reorderedPayload }, {withCredentials: true});
       setQuestions(updatedQuestions);
       setActiveQuestionIndex(newIndex);
     } catch (err) {
@@ -187,7 +187,7 @@ export default function PresenterScreen() {
             Vote code: {passcode}
           </div>
           <span className="text-slate-300 text-sm hidden md:inline font-medium">
-            Go to <strong className="text-white underline"></strong> & use code
+            Go to <strong className="text-white underline">localhost:3000</strong> & use code
           </span>
         </div>
 
