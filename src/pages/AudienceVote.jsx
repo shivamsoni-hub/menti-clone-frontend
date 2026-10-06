@@ -16,16 +16,26 @@ export default function AudienceVote() {
   const [showQrModal, setShowQrModal] = useState(false); // Controls the QR code popup modal
   const [copied, setCopied] = useState(false);
 
-  const activeQuestionIndex = 0; // Displaying the primary question
+  var [activeQuestion, setActiveQuestion] = useState(null);
 
   // Dynamic voting URL for mobile sharing
   const joinUrl = `https://menti-clone-frontend-2.onrender.com/vote/${passcode}`;
 
   useEffect(() => {
-    axios.get(`https://menti-clone-backend-2.onrender.com/api/sessions/${passcode}`)
+    axios.get(`https://menti-clone-backend-2.onrender.com/api/sessions/${passcode}`, { withCredentials: true })
       .then(res => {
         setSession(res.data.session);
-        setQuestions(res.data.questions);
+
+        const sortedQuestions = [...res.data.questions].sort(
+          (a, b) => a.question_order - b.question_order
+        );
+
+        setQuestions(sortedQuestions);
+
+        // Start with the first question
+        if (sortedQuestions.length > 0) {
+          setActiveQuestion(sortedQuestions[0]);
+        }
       })
       .catch(err => {
         console.error(err);
@@ -35,7 +45,7 @@ export default function AudienceVote() {
     socket.emit('join_session', passcode);
   }, [passcode]);
 
-  const handleCopyLink = () => {
+const handleCopyLink = () => {
     navigator.clipboard.writeText(joinUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -57,13 +67,14 @@ export default function AudienceVote() {
     return <div className="min-h-screen bg-slate-50 flex items-center justify-center text-sm text-slate-500">Connecting to session...</div>;
   }
 
-  const activeQuestion = questions[activeQuestionIndex];
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!selectedOption) return;
+
+    if (!selectedOption || !activeQuestion) return;
 
     let voterId = sessionStorage.getItem(`voter_${passcode}`);
+
     if (!voterId) {
       voterId = 'voter_' + Math.random().toString(36).substring(2);
       sessionStorage.setItem(`voter_${passcode}`, voterId);
@@ -76,13 +87,34 @@ export default function AudienceVote() {
       userIdentifier: voterId
     });
 
-    setSubmitted(true);
+    // Find the current question
+    const currentIndex = questions.findIndex(
+      (question) => question.id === activeQuestion.id
+    );
+
+    // If there is another question, move to it
+    if (currentIndex < questions.length - 1) {
+      const nextQuestion = questions[currentIndex + 1];
+
+      setActiveQuestion(nextQuestion);
+      setSelectedOption(null);
+    } else {
+      // Only show submitted screen after the LAST question
+      setSubmitted(true);
+    }
   };
+
+
+
+
+
+
+
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col justify-between p-6 max-w-md mx-auto relative">
       <div className="space-y-6">
-        
+
         {/* Top Header with Mentimeter-Style Share QR Button */}
         <div className="flex justify-between items-center border-b border-slate-200 pb-4">
           <span className="font-mono text-xs font-bold bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full truncate max-w-[180px]">
@@ -113,11 +145,10 @@ export default function AudienceVote() {
                   type="button"
                   key={opt.id}
                   onClick={() => setSelectedOption(opt.id)}
-                  className={`w-full p-4 rounded-2xl text-left font-medium transition border flex items-center justify-between ${
-                    selectedOption === opt.id 
-                      ? 'bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-600/20' 
-                      : 'bg-white text-slate-700 border-slate-200 hover:border-indigo-300'
-                  }`}
+                  className={`w-full p-4 rounded-2xl text-left font-medium transition border flex items-center justify-between ${selectedOption === opt.id
+                    ? 'bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-600/20'
+                    : 'bg-white text-slate-700 border-slate-200 hover:border-indigo-300'
+                    }`}
                 >
                   <span>{opt.option_text}</span>
                   <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${selectedOption === opt.id ? 'border-white bg-white/20' : 'border-slate-300'}`}>
@@ -130,11 +161,10 @@ export default function AudienceVote() {
             <button
               type="submit"
               disabled={!selectedOption}
-              className={`w-full py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition ${
-                selectedOption 
-                  ? 'bg-gradient-to-r from-indigo-600 to-pink-600 text-white shadow-lg shadow-indigo-600/30' 
-                  : 'bg-slate-200 text-slate-400 cursor-not-allowed'
-              }`}
+              className={`w-full py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition ${selectedOption
+                ? 'bg-gradient-to-r from-indigo-600 to-pink-600 text-white shadow-lg shadow-indigo-600/30'
+                : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                }`}
             >
               Submit Vote <Send size={16} />
             </button>
@@ -154,9 +184,9 @@ export default function AudienceVote() {
       {showQrModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white text-slate-900 rounded-3xl p-6 max-w-sm w-full shadow-2xl relative text-center space-y-5 border border-slate-100">
-            
+
             {/* Close Button */}
-            <button 
+            <button
               onClick={() => setShowQrModal(false)}
               className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-full transition"
             >
