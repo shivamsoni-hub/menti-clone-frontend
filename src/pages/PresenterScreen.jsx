@@ -25,7 +25,7 @@ export default function PresenterScreen() {
   const [optionsText, setOptionsText] = useState(['', '']);
 
   // Dynamic voting URL for mobile devices
-  const joinUrl = `${window.location.protocol}//${window.location.hostname}:3000/vote/${passcode}`;
+  const joinUrl = `${window.location.protocol}//${window.location.hostname}/vote/${passcode}`;
 
   const fetchSession = async () => {
     try {
