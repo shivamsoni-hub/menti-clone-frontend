@@ -206,7 +206,7 @@ export default function PresenterScreen() {
       </div>
 
       {/* Presenter Question Control Bar (Add, Edit, Reorder, State Toggle) */}
-      <div className="max-w-4xl mx-auto w-full flex flex-wrap items-center justify-between gap-4 bg-slate-800/60 border border-white/10 px-5 py-3 rounded-2xl mt-4">
+      <div className="max-w-7xl mx-auto w-full flex flex-wrap items-center justify-between gap-4 bg-slate-800/60 border border-white/10 px-5 py-3 rounded-2xl mt-4">
         <div className="flex items-center gap-2">
           <button
             disabled={activeQuestionIndex === 0}
@@ -278,7 +278,7 @@ export default function PresenterScreen() {
       </div>
 
       {/* Main Slide Content: Question & Live Bars */}
-      <div className="max-w-4xl mx-auto w-full my-auto py-8 space-y-8">
+      {/* <div className="max-w-4xl mx-auto w-full my-auto py-8 space-y-8">
         <h2 className="text-3xl lg:text-5xl font-extrabold leading-tight text-center tracking-tight">
           {activeQuestion.question_text}
         </h2>
@@ -302,7 +302,147 @@ export default function PresenterScreen() {
             );
           })}
         </div>
+      </div> */}
+
+      <div className="max-w-7xl mx-auto w-full my-auto px-4 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+
+          {/* LEFT GRID — QR CODE / JOIN INFO */}
+          <div className="bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-md flex flex-col items-center justify-center text-center shadow-xl">
+
+            <div className="space-y-2 mb-6">
+              <span className="text-xs font-bold uppercase tracking-widest text-indigo-400 bg-indigo-500/10 px-3 py-1 rounded-full">
+                Interactive Session
+              </span>
+
+              <h3 className="text-2xl lg:text-3xl font-black text-white">
+                Scan to vote
+              </h3>
+
+              <p className="text-slate-400 text-sm">
+                Scan the QR code with your phone to join
+              </p>
+            </div>
+
+            {/* QR CODE */}
+            <div className="p-5 bg-white border-2 border-white/10 rounded-3xl inline-block shadow-2xl">
+              <QRCodeSVG
+                value={joinUrl}
+                size={240}
+                bgColor="#ffffff"
+                fgColor="#0f172a"
+                level="H"
+              />
+            </div>
+
+            {/* VOTE CODE */}
+            <div className="mt-6 w-full max-w-sm bg-black/20 p-5 rounded-2xl border border-white/10">
+              <p className="text-xs text-slate-400 font-medium mb-2">
+                Or enter this code at
+              </p>
+
+              <p className="text-sm text-slate-300 mb-3">
+                <span className="text-white font-semibold">
+                  localhost:3000
+                </span>
+              </p>
+
+              <div className="bg-indigo-600 px-5 py-3 rounded-xl font-mono font-black text-2xl tracking-widest text-white shadow-lg">
+                {passcode}
+              </div>
+            </div>
+
+            {/* LIVE VOTE COUNT */}
+            <div className="mt-5 flex items-center gap-2 text-slate-300 text-sm bg-black/20 px-4 py-2 rounded-xl border border-white/5">
+              <Users size={16} className="text-indigo-400" />
+              <span>
+                {totalVotes} {totalVotes === 1 ? "Vote" : "Votes"}
+              </span>
+            </div>
+
+          </div>
+
+
+          {/* RIGHT GRID — QUESTION + VERTICAL BARS */}
+          <div className="bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-md shadow-xl flex flex-col">
+
+            {/* QUESTION */}
+            <div className="mb-8">
+              <p className="text-xs font-bold uppercase tracking-widest text-indigo-400 mb-3">
+                Live Results
+              </p>
+
+              <h2 className="text-3xl lg:text-4xl font-extrabold leading-tight tracking-tight text-white">
+                {activeQuestion.question_text}
+              </h2>
+            </div>
+
+
+            {/* VERTICAL BAR CHART */}
+            <div className="flex-1 flex items-end justify-center gap-4 md:gap-8 min-h-[350px] pt-8">
+
+              {activeQuestion.options?.map((opt, idx) => {
+                const count = currentResults[opt.id] || 0;
+
+                const percentage =
+                  totalVotes > 0
+                    ? Math.round((count / totalVotes) * 100)
+                    : 0;
+
+                return (
+                  <div
+                    key={opt.id}
+                    className="flex-1 max-w-[130px] h-full flex flex-col items-center justify-end"
+                  >
+
+                    {/* VALUE */}
+                    <div className="mb-3 text-center">
+                      <div className="font-mono text-indigo-300 font-bold text-lg">
+                        {percentage}%
+                      </div>
+
+                      <div className="text-xs text-slate-400">
+                        {count} votes
+                      </div>
+                    </div>
+
+
+                    {/* BAR CONTAINER */}
+                    <div className="relative w-full h-[260px] bg-white/5 rounded-t-2xl border border-white/10 overflow-hidden flex items-end">
+
+                      {/* BAR */}
+                      <div
+                        className="w-full bg-gradient-to-t from-indigo-600 via-purple-500 to-pink-500 transition-all duration-700 ease-out rounded-t-xl"
+                        style={{
+                          height: `${percentage}%`,
+                        }}
+                      />
+
+                    </div>
+
+
+                    {/* OPTION LABEL */}
+                    <div className="mt-4 text-center">
+                      <div className="w-8 h-8 mx-auto mb-2 rounded-full bg-indigo-600 flex items-center justify-center text-sm font-bold">
+                        {idx + 1}
+                      </div>
+
+                      <span className="text-sm md:text-base font-semibold text-white leading-tight">
+                        {opt.option_text}
+                      </span>
+                    </div>
+
+                  </div>
+                );
+              })}
+
+            </div>
+
+          </div>
+
+        </div>
       </div>
+
 
       {/* Add / Edit Question Modal */}
       {showQuestionModal && (
