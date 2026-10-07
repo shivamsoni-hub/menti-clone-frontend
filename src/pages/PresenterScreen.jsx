@@ -305,23 +305,23 @@ export default function PresenterScreen() {
       </div> */}
 
       <div className="max-w-7xl mx-auto w-full my-auto px-4 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
 
           {/* LEFT GRID — QR CODE / JOIN INFO */}
           <div className="bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-md flex flex-col items-center justify-center text-center shadow-xl">
 
             <div className="space-y-2 mb-6">
-              <span className="text-xs font-bold uppercase tracking-widest text-indigo-400 bg-indigo-500/10 px-3 py-1 rounded-full">
+              {/* <span className="text-xs font-bold uppercase tracking-widest text-indigo-400 bg-indigo-500/10 px-3 py-1 rounded-full">
                 Interactive Session
-              </span>
+              </span> */}
 
               <h3 className="text-2xl lg:text-3xl font-black text-white">
                 Scan to vote
               </h3>
 
-              <p className="text-slate-400 text-sm">
+              {/* <p className="text-slate-400 text-sm">
                 Scan the QR code with your phone to join
-              </p>
+              </p> */}
             </div>
 
             {/* QR CODE */}
@@ -336,7 +336,7 @@ export default function PresenterScreen() {
             </div>
 
             {/* VOTE CODE */}
-            <div className="mt-6 w-full max-w-sm bg-black/20 p-5 rounded-2xl border border-white/10">
+            {/* <div className="mt-6 w-full max-w-sm bg-black/20 p-5 rounded-2xl border border-white/10">
               <p className="text-xs text-slate-400 font-medium mb-2">
                 Or enter this code at
               </p>
@@ -350,7 +350,7 @@ export default function PresenterScreen() {
               <div className="bg-indigo-600 px-5 py-3 rounded-xl font-mono font-black text-2xl tracking-widest text-white shadow-lg">
                 {passcode}
               </div>
-            </div>
+            </div> */}
 
             {/* LIVE VOTE COUNT */}
             <div className="mt-5 flex items-center gap-2 text-slate-300 text-sm bg-black/20 px-4 py-2 rounded-xl border border-white/5">
@@ -369,12 +369,41 @@ export default function PresenterScreen() {
             {/* QUESTION */}
             <div className="mb-8">
               <p className="text-xs font-bold uppercase tracking-widest text-indigo-400 mb-3">
-                Live Results
+                Question
               </p>
 
               <h2 className="text-3xl lg:text-4xl font-extrabold leading-tight tracking-tight text-white">
                 {activeQuestion.question_text}
               </h2>
+
+              {/* OPTIONS */}
+              <div className="mt-6 grid grid-cols-1 gap-3">
+                {activeQuestion.options?.map((opt, idx) => (
+                  <div
+                    key={opt.id}
+                    className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-4 py-2"
+                  >
+                    <div className="w-7 h-7 rounded-full bg-indigo-600 flex items-center justify-center text-sm font-bold">
+                      {idx + 1}
+                    </div>
+
+                    <span className="text-sm md:text-base font-semibold text-white">
+                      {opt.option_text}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+          </div>
+
+          <div className="bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-md shadow-xl flex flex-col">
+
+            {/* QUESTION */}
+            <div className="mb-8">
+              <p className="text-xs font-bold uppercase tracking-widest text-indigo-400 mb-3">
+                Live Polling Results
+              </p>
             </div>
 
 
