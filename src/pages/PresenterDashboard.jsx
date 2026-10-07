@@ -56,7 +56,7 @@ export default function PresenterDashboard() {
 
 
       // 3. Redirect to Presenter Big Screen View
-      // navigate(`/presenter/session/${passcode}`);
+      navigate(`/presenter/session/${passcode}`);
     } catch (err) {
       console.error(err);
       alert('Failed to create session or question. Ensure backend is running and you are logged in.');
