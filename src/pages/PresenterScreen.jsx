@@ -100,7 +100,7 @@ export default function PresenterScreen() {
       };
 
       if (editingQuestion) {
-        await axios.put(`https://menti-clone-backend-2.onrender.com/api/questions/${editingQuestion.id}`, payload, { withCredentials: true } );
+        await axios.put(`https://menti-clone-backend-2.onrender.com/api/questions/${editingQuestion.id}`, payload, { withCredentials: true });
       } else {
         await axios.post(`https://menti-clone-backend-2.onrender.com/api/questions`, payload, { withCredentials: true });
       }
@@ -151,7 +151,7 @@ export default function PresenterScreen() {
     }));
 
     try {
-      await axios.patch(`https://menti-clone-backend-2.onrender.com/api/sessions/${session.id}/reorder`, { questions: reorderedPayload }, {withCredentials: true});
+      await axios.patch(`https://menti-clone-backend-2.onrender.com/api/sessions/${session.id}/reorder`, { questions: reorderedPayload }, { withCredentials: true });
       setQuestions(updatedQuestions);
       setActiveQuestionIndex(newIndex);
     } catch (err) {
@@ -185,17 +185,17 @@ export default function PresenterScreen() {
 
         {/* LEFT — Vote Code */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-          <div className="bg-indigo-600 px-4 py-2.5 rounded-xl font-mono font-bold tracking-wider text-sm shadow-md text-center">
+          {/* <div className="bg-indigo-600 px-4 py-2.5 rounded-xl font-mono font-bold tracking-wider text-sm shadow-md text-center">
             Vote code: {passcode}
-          </div>
+          </div> */}
 
-          <span className="text-slate-300 text-sm hidden md:inline font-medium">
+          {/* <span className="text-slate-300 text-sm hidden md:inline font-medium">
             Go to{" "}
             <strong className="text-white underline">
               https://menti-clone-frontend-2.onrender.com
             </strong>{" "}
             & use code
-          </span>
+          </span> */}
         </div>
 
         {/* RIGHT — Votes + QR */}
@@ -384,6 +384,14 @@ export default function PresenterScreen() {
                 {totalVotes} {totalVotes === 1 ? "Vote" : "Votes"}
               </span>
             </div>
+
+            <button
+              onClick={handleCopyLink}
+              className="mt-5 w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl flex items-center justify-center gap-2 transition shadow-md"
+            >
+              {copied ? <Check size={16} className="text-emerald-400" /> : <Copy size={16} />}
+              {copied ? 'Link Copied to Clipboard!' : 'Copy Voting Link'}
+            </button>
 
           </div>
 
