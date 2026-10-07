@@ -181,32 +181,56 @@ export default function PresenterScreen() {
     <div className="min-h-screen bg-slate-900 text-white flex flex-col justify-between p-6 relative">
 
       {/* Mentimeter-Style Top Bar */}
-      <div className="flex justify-between items-center bg-white/5 border border-white/10 px-6 py-4 rounded-2xl backdrop-blur-md">
-        <div className="flex items-center gap-4">
-          <div className="bg-indigo-600 px-4 py-2 rounded-xl font-mono font-bold tracking-wider text-sm shadow-md">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 bg-white/5 border border-white/10 px-4 sm:px-6 py-4 rounded-2xl backdrop-blur-md">
+
+        {/* LEFT — Vote Code */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+          <div className="bg-indigo-600 px-4 py-2.5 rounded-xl font-mono font-bold tracking-wider text-sm shadow-md text-center">
             Vote code: {passcode}
           </div>
+
           <span className="text-slate-300 text-sm hidden md:inline font-medium">
-            Go to <strong className="text-white underline">localhost:3000</strong> & use code
+            Go to{" "}
+            <strong className="text-white underline">
+              https://menti-clone-frontend-2.onrender.com
+            </strong>{" "}
+            & use code
           </span>
         </div>
 
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 text-slate-300 text-sm bg-black/20 px-3 py-1.5 rounded-xl border border-white/5">
-            <Users size={16} className="text-indigo-400" /> <span>{totalVotes} Votes</span>
+        {/* RIGHT — Votes + QR */}
+        <div className="flex items-center justify-between sm:justify-end gap-3">
+
+          {/* Vote Count */}
+          <div className="flex items-center gap-2 text-slate-300 text-sm bg-black/20 px-3 py-2 rounded-xl border border-white/5">
+            <Users size={16} className="text-indigo-400" />
+            <span>
+              {totalVotes} <span className="hidden xs:inline">Votes</span>
+            </span>
           </div>
 
+          {/* QR Button */}
           <button
             onClick={() => setShowQrModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 transition rounded-xl text-sm font-semibold border border-white/10 shadow-lg"
+            className="flex items-center gap-2 px-3 sm:px-4 py-2.5 bg-white/10 hover:bg-white/20 transition rounded-xl text-sm font-semibold border border-white/10 shadow-lg"
           >
-            <Share2 size={16} /> Share QR Code
+            <Share2 size={16} />
+
+            <span className="hidden sm:inline">
+              Share QR Code
+            </span>
+
+            <span className="sm:hidden">
+              Share QR Code
+            </span>
           </button>
+
         </div>
       </div>
 
+
       {/* Presenter Question Control Bar (Add, Edit, Reorder, State Toggle) */}
-      <div className="max-w-7xl mx-auto w-full flex flex-wrap items-center justify-between gap-4 bg-slate-800/60 border border-white/10 px-5 py-3 rounded-2xl mt-4">
+      {/* <div className="max-w-7xl mx-auto w-full flex flex-wrap items-center justify-between gap-4 bg-slate-800/60 border border-white/10 px-5 py-3 rounded-2xl mt-4">
         <div className="flex items-center gap-2">
           <button
             disabled={activeQuestionIndex === 0}
@@ -275,7 +299,7 @@ export default function PresenterScreen() {
             <Trash2 size={14} />
           </button>
         </div>
-      </div>
+      </div> */}
 
       {/* Main Slide Content: Question & Live Bars */}
       {/* <div className="max-w-4xl mx-auto w-full my-auto py-8 space-y-8">
@@ -325,10 +349,11 @@ export default function PresenterScreen() {
             </div>
 
             {/* QR CODE */}
-            <div className="p-5 bg-white border-2 border-white/10 rounded-3xl inline-block shadow-2xl">
+            <div className="p-3 sm:p-4 bg-white border-2 border-white/10 rounded-3xl inline-block shadow-2xl">
               <QRCodeSVG
                 value={joinUrl}
-                size={240}
+                size={180}
+                className="w-[150px] h-[150px] sm:w-[180px] sm:h-[180px] lg:w-[240px] lg:h-[240px]"
                 bgColor="#ffffff"
                 fgColor="#0f172a"
                 level="H"
@@ -400,15 +425,15 @@ export default function PresenterScreen() {
           <div className="bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-md shadow-xl flex flex-col">
 
             {/* QUESTION */}
-            <div className="mb-8">
-              <p className="text-xs font-bold uppercase tracking-widest text-indigo-400 mb-3">
+            <div className="mb-2">
+              <p className="text-3xl lg:text-4xl font-extrabold leading-tight tracking-tight text-white uppercase text-indigo-400 mb-3 text-center">
                 Live Polling Results
               </p>
             </div>
 
 
             {/* VERTICAL BAR CHART */}
-            <div className="flex-1 flex items-end justify-center gap-4 md:gap-8 min-h-[350px] pt-8">
+            <div className="flex-1 flex items-end justify-center gap-4 md:gap-8 min-h-[350px] pt-4">
 
               {activeQuestion.options?.map((opt, idx) => {
                 const count = currentResults[opt.id] || 0;
