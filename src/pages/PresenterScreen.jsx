@@ -210,7 +210,7 @@ export default function PresenterScreen() {
           </div>
 
           {/* QR Button */}
-          <button
+          {/* <button
             onClick={() => setShowQrModal(true)}
             className="flex items-center gap-2 px-3 sm:px-4 py-2.5 bg-white/10 hover:bg-white/20 transition rounded-xl text-sm font-semibold border border-white/10 shadow-lg"
           >
@@ -223,7 +223,7 @@ export default function PresenterScreen() {
             <span className="sm:hidden">
               Share QR Code
             </span>
-          </button>
+          </button> */}
 
         </div>
       </div>
